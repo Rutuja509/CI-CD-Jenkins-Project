@@ -5,26 +5,38 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git 'https://github.com/Rutuja509/CI-CD-Jenkins-Project.git'
+                git branch: 'master',
+                    url: 'https://github.com/Rutuja509/Scripting.git'
             }
         }
 
-        stage('Install') {
+        stage('Build') {
             steps {
-                sh 'pip install -r requirements.txt'
+                echo 'Building...'
+                sh 'mvn clean package'
             }
         }
 
         stage('Test') {
             steps {
-                sh 'pytest'
+                echo 'Running tests...'
+                sh 'mvn test'
             }
         }
 
-        stage('Run Application') {
+        stage('Deploy') {
             steps {
-                sh 'python app.py'
+                echo 'Deploying...'
             }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully'
+        }
+        failure {
+            echo 'Pipeline failed'
         }
     }
 }
